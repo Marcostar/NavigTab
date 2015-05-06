@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">NavigTab</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="nav_titles">
+        <item>Categorized</item>
+        <item>Individual</item>
+    </string-array>
+
+    <string-array name="nav_icon">
+        <item>@mipmap/ic_launcher</item>
+        <item>@mipmap/ic_launcher</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    
+</resources>
