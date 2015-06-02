@@ -1,5 +1,6 @@
 package com.example.maxx.navigtab;
 
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -7,17 +8,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.maxx.navigtab.adapter.drawerListAdapter;
+import com.example.maxx.navigtab.adapter.DrawerListAdapter;
+import com.example.maxx.navigtab.fragments.SlidingTab;
 import com.example.maxx.navigtab.fragments.fragment1;
-import com.example.maxx.navigtab.fragments.slidingTab;
-import com.example.maxx.navigtab.model.navDrawerItem;
+import com.example.maxx.navigtab.model.NavigationDrawerItem;
 
 import java.util.ArrayList;
 
@@ -31,20 +34,21 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private DrawerLayout mDrawerLayout;
-    private ArrayList<navDrawerItem> navDrawerItems;
+    private ArrayList<NavigationDrawerItem> NavigationDrawerItems;
     private ListView mDrawerList;
     private String[] navMenuTitles;
     private TypedArray navMenuIcons;
     private ActionBarDrawerToggle mDrawerToggle;
-    private drawerListAdapter adapter;
-    private int mCurrentSelectedPosition = 0;
-
+    private DrawerListAdapter adapter;
+    private Toolbar toolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        setSupportActionBar(toolbar);
         mTitle = mDrawerTitle = getTitle();
 
         navMenuTitles = getResources().getStringArray(R.array.nav_titles);
@@ -73,15 +77,15 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 
-        navDrawerItems = new ArrayList<>();
+        NavigationDrawerItems = new ArrayList<>();
 
-        navDrawerItems.add(new navDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        navDrawerItems.add(new navDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+        NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+        NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
 
         navMenuIcons.recycle();
 
 
-        adapter = new drawerListAdapter(getApplicationContext(),navDrawerItems);
+        adapter = new DrawerListAdapter(getApplicationContext(), NavigationDrawerItems);
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -159,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
             case 0:
 
                 fragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, new slidingTab()).commit();
+                        .replace(R.id.content_frame, new SlidingTab()).commit();
                 mDrawerList.setItemChecked(position, true);
                 setTitle(navMenuTitles[position]);
                 mDrawerLayout.closeDrawer(mDrawerList);
@@ -183,5 +187,25 @@ public class MainActivity extends AppCompatActivity {
     public void setTitle(CharSequence title) {
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
+    }
+
+    //OnBackPressed
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Read Enough?")
+                .setCancelable(false)
+                .setMessage("Are you sure you want to stop reading?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }

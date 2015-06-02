@@ -17,7 +17,7 @@ import com.example.maxx.navigtab.R;
 import com.example.maxx.navigtab.tabView.SlidingTabLayout;
 
 
-public class slidingTab extends Fragment {
+public class SlidingTab extends Fragment {
 
     static final String LOG_TAG = "SlidingTabsBasicFragment";
 
@@ -56,9 +56,12 @@ public class slidingTab extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
 
+
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        mViewPager.setAdapter(new tabPages(getFragmentManager()));
         mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setAdapter(new tabPages(getActivity().getSupportFragmentManager()));
+
+
 
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
@@ -93,10 +96,10 @@ public class slidingTab extends Fragment {
             {
                 case 0: return "TOP STORIES ";
                 case 1: return "NATIONAL ";
-                case 2: return "SPORTS";
-                case 3: return "ENTERTAINMENT";
-                case 4: return "ECONOMY";
-                case 5: return "POLITICS";
+                case 2: return "WORLD";
+                case 3: return "SPORT";
+                case 4: return "ENTERTAINMENT";
+                case 5: return "BUSINESS";
             }
             return null;
         }

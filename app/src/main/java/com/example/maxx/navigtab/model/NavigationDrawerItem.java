@@ -3,19 +3,19 @@ package com.example.maxx.navigtab.model;
 /**
  * Created by maxx on 2/5/15.
  */
-public class navDrawerItem {
+public class NavigationDrawerItem {
     private String title;
     private int icon;
     private String count = "0";
 
-    public navDrawerItem(){}
+    public NavigationDrawerItem(){}
 
-    public navDrawerItem(String title, int icon){
+    public NavigationDrawerItem(String title, int icon){
         this.title = title;
         this.icon = icon;
     }
 
-    public navDrawerItem(String title, int icon, String count){
+    public NavigationDrawerItem(String title, int icon, String count){
         this.title = title;
         this.icon = icon;
         this.count = count;

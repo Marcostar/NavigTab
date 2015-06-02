@@ -13,29 +13,29 @@ import com.example.maxx.navigtab.R;
 
 import java.util.ArrayList;
 
-import com.example.maxx.navigtab.model.navDrawerItem;
+import com.example.maxx.navigtab.model.NavigationDrawerItem;
 
 /**
  * Created by maxx on 2/5/15.
  */
-public class drawerListAdapter extends BaseAdapter {
+public class DrawerListAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<navDrawerItem> navDrawerItems;
+    private ArrayList<NavigationDrawerItem> NavigationDrawerItems;
 
-    public drawerListAdapter(Context context, ArrayList<navDrawerItem> navDrawerItems){
+    public DrawerListAdapter(Context context, ArrayList<NavigationDrawerItem> NavigationDrawerItems){
         this.context = context;
-        this.navDrawerItems = navDrawerItems;
+        this.NavigationDrawerItems = NavigationDrawerItems;
     }
 
     @Override
     public int getCount() {
-        return navDrawerItems.size();
+        return NavigationDrawerItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return navDrawerItems.get(position);
+        return NavigationDrawerItems.get(position);
     }
 
     @Override
@@ -55,8 +55,8 @@ public class drawerListAdapter extends BaseAdapter {
         TextView txtTitle = (TextView) convertView.findViewById(R.id.nav_item_title);
 
 
-        imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
-        txtTitle.setText(navDrawerItems.get(position).getTitle());
+        imgIcon.setImageResource(NavigationDrawerItems.get(position).getIcon());
+        txtTitle.setText(NavigationDrawerItems.get(position).getTitle());
 
         // displaying count
         // check whether it set visible or not
