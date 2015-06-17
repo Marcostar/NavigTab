@@ -1,8 +1,10 @@
 package com.example.maxx.navigtab;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.Network;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.maxx.navigtab.adapter.DrawerListAdapter;
 import com.example.maxx.navigtab.fragments.SlidingTab;
@@ -26,9 +29,6 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
-
-
-
 
 
     private CharSequence mDrawerTitle;
@@ -42,15 +42,22 @@ public class MainActivity extends AppCompatActivity {
     private DrawerListAdapter adapter;
     private Toolbar toolbar;
 
+    public static final String PreferenceSETTINGS = "Preferences";
+    public static final String LANGUAGE = "English";
+    SharedPreferences sharedPreferences ;
+    public String URL="http://192.168.1.4/GetNews/";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         mTitle = mDrawerTitle = getTitle();
-
+        sharedPreferences = getSharedPreferences(PreferenceSETTINGS, this.MODE_PRIVATE);
         navMenuTitles = getResources().getStringArray(R.array.nav_titles);
         navMenuIcons = getResources().obtainTypedArray(R.array.nav_icon);
 
@@ -150,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+
+
     private class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -183,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
         // Highlight the selected item, update the title, and close the drawer
 
     }
+
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
@@ -208,4 +218,5 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("No", null)
                 .show();
     }
+
 }

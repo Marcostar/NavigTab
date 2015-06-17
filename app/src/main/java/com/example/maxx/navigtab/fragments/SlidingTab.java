@@ -77,12 +77,21 @@ public class SlidingTab extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = new DemoObjectFragment();
-            Bundle args = new Bundle();
-            // Our object is just an integer :-P
-            args.putInt(DemoObjectFragment.ARG_OBJECT, position + 1);
-            fragment.setArguments(args);
-            return fragment;
+            switch (position)
+            {
+                case 0:
+                    return new TopStories();
+                default:
+
+                    Fragment fragment = new DemoObjectFragment();
+                    Bundle args = new Bundle();
+                    // Our object is just an integer :-P
+                    args.putInt(DemoObjectFragment.ARG_OBJECT, position + 1);
+                    fragment.setArguments(args);
+                    return fragment;
+
+            }
+
         }
 
         @Override
