@@ -50,10 +50,7 @@ public class NewsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup viewGroup) {
 
     ViewHolder viewHolder;
-        /*if(inflater == null)
-        {
-            inflater = (LayoutInflater) activity.getSystemService(activity.LAYOUT_INFLATER_SERVICE);
-        }*/
+
         if(convertView == null)
         {
             inflater = (LayoutInflater) activity.getSystemService(activity.LAYOUT_INFLATER_SERVICE);
@@ -71,32 +68,19 @@ public class NewsAdapter extends BaseAdapter {
         {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        //Article image
-        //NetworkImageView thumbnail = (NetworkImageView) convertView.findViewById(R.id.cat_thumbnail);
 
-        //Article title
-        //TextView title = (TextView) convertView.findViewById(R.id.cat_title);
-
-        //Newspaper Name
-        //TextView newspaperName = (TextView) convertView.findViewById(R.id.cat_paper);
-
-        //
         NewsArticles news = newsArticlesItems.get(position);
 
-        /*if(!URLUtil.isValidUrl(news.getThumbnailUrl()))
+
+        if(news.getThumbnailUrl()=="")
         {
             viewHolder.thumbnail.setVisibility(View.GONE);
-        }*/
-
-        if (position != -1 && news.getThumbnailUrl()!="") {
-            viewHolder.thumbnail.setImageUrl(news.getThumbnailUrl(), imageLoader);
         }
         else
         {
-            viewHolder.thumbnail.setVisibility(View.GONE);
+            viewHolder.thumbnail.setVisibility(View.VISIBLE);
+            viewHolder.thumbnail.setImageUrl(news.getThumbnailUrl(), imageLoader);
         }
-
-
 
         viewHolder.title.setText(news.getTitle());
         viewHolder.name.setText(news.getNewspaperName());

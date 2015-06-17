@@ -81,8 +81,9 @@ public class SlidingTab extends Fragment {
             {
                 case 0:
                     return new TopStories();
+                case 1:
+                    return new National();
                 default:
-
                     Fragment fragment = new DemoObjectFragment();
                     Bundle args = new Bundle();
                     // Our object is just an integer :-P

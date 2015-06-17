@@ -2,7 +2,6 @@ package com.example.maxx.navigtab.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -34,11 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by maxx on 22/5/15.
+ * Created by maxx on 17/6/15.
  */
-public class TopStories extends Fragment {
-    private static final String TAG = TopStories.class.getSimpleName();
-
+public class National extends Fragment {
     private static final String StoryType = "TopStories.php";
     private String url = "http://192.168.1.5/simplepie/India";
     SharedPreferences sharedPreferences;
@@ -51,21 +47,11 @@ public class TopStories extends Fragment {
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootview = inflater.inflate(R.layout.categorized_list,container,false);
-        sharedPreferences = this.getActivity().getSharedPreferences("PreferenceSETTING",Context.MODE_PRIVATE);
+        sharedPreferences = this.getActivity().getSharedPreferences("PreferenceSETTING", Context.MODE_PRIVATE);
         language = sharedPreferences.getString("LANGUAGE","English");
         listView = (ListView) rootview.findViewById(R.id.cat_list);
         newsAdapter = new NewsAdapter(getActivity(),newsArticlesList);
         listView.setAdapter(newsAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String NewsPaperName = newsArticlesList.get(position).getNewspaperName();
-                String Title = newsArticlesList.get(position).getTitle();
-                String ThumbnailURL = newsArticlesList.get(position).getThumbnailUrl();
-
-                Intent intent = new Intent();
-            }
-        });
 
         loadDialog = new ProgressDialog(getActivity());
         loadDialog.setMessage("Getting Stories...");
@@ -111,7 +97,7 @@ public class TopStories extends Fragment {
                 hideDialog();
             }
         });
-        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(5000,5,1f));
+        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(5000, 5, 1f));
         MySingleton.getInstance(getActivity()).addToRequestQueue(topStoriesRequest);
 
         return rootview;
