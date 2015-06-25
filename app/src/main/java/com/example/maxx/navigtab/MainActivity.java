@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.net.Network;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -18,11 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.maxx.navigtab.adapter.DrawerListAdapter;
 import com.example.maxx.navigtab.fragments.SlidingTab;
-import com.example.maxx.navigtab.fragments.fragment1;
+import com.example.maxx.navigtab.fragments.IndividualPaper;
 import com.example.maxx.navigtab.model.NavigationDrawerItem;
 
 import java.util.ArrayList;
@@ -182,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             case 1:
 
                 fragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, new fragment1())
+                        .replace(R.id.content_frame, new IndividualPaper())
                         .commit();
                 mDrawerList.setItemChecked(position, true);
                 setTitle(navMenuTitles[position]);

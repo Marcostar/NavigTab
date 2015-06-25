@@ -4,11 +4,10 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    tools:context="com.example.maxx.navigtab.Language"
-    >
+    tools:context="com.example.maxx.navigtab.Language">
 
     <ListView
-        android:id="@+id/languageList"
+        android:id="@+id/NewsPaperList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@android:color/transparent"

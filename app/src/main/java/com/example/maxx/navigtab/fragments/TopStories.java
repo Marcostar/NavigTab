@@ -17,6 +17,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.maxx.navigtab.CategorisedDetails;
 import com.example.maxx.navigtab.MainActivity;
 import com.example.maxx.navigtab.MySingleton;
 import com.example.maxx.navigtab.R;
@@ -40,7 +41,7 @@ public class TopStories extends Fragment {
     private static final String TAG = TopStories.class.getSimpleName();
 
     private static final String StoryType = "TopStories.php";
-    private String url = "http://192.168.1.5/simplepie/India";
+    private String url = "http://192.168.1.4/simplepie/India";
     SharedPreferences sharedPreferences;
     private String language;
     private ProgressDialog loadDialog;
@@ -62,8 +63,18 @@ public class TopStories extends Fragment {
                 String NewsPaperName = newsArticlesList.get(position).getNewspaperName();
                 String Title = newsArticlesList.get(position).getTitle();
                 String ThumbnailURL = newsArticlesList.get(position).getThumbnailUrl();
+                String Content = newsArticlesList.get(position).getcontent();
+                String ArticleLink = newsArticlesList.get(position).getArticleLink();
 
-                Intent intent = new Intent();
+                //Pass the values to another activity
+                Intent intent = new Intent(getActivity(), CategorisedDetails.class);
+                intent.putExtra("NewsPaperName",NewsPaperName);
+                intent.putExtra("Title",Title);
+                intent.putExtra("ThumbnailURL",ThumbnailURL);
+                intent.putExtra("Content",Content);
+                intent.putExtra("ArticleLink",ArticleLink);
+
+                startActivity(intent);
             }
         });
 
@@ -82,12 +93,18 @@ public class TopStories extends Fragment {
                     {
                         JSONObject object = NewsItems.getJSONObject(i);
                         NewsArticles news = new NewsArticles();
-                        //news.setArticleLink(object.getString("ArticleLink"));
+
                         news.setTitle(object.getString("Title"));
-                        //news.setContent(object.getString("Content"));
+
                         news.setNewspaperName(object.getString("Source"));
-                        //Image Extraction
+
                         Document doc = Jsoup.parse(object.getString("Content"));
+                        news.setcontent(doc.text());
+
+                        news.setArticleLink(object.getString("ArticleLink"));
+
+                        //Image Extraction
+                        doc = Jsoup.parse(object.getString("Content"));
                         Elements link = doc.select("img");
                         if(link.attr("src")!= null)
                         {
@@ -96,6 +113,7 @@ public class TopStories extends Fragment {
                         else {
                             news.setThumbnailUrl(null);
                         }
+
                         newsArticlesList.add(news);
                     }
 

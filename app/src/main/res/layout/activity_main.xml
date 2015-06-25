@@ -19,7 +19,8 @@
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            />
 
     <!-- The navigation drawer -->
         <ListView android:id="@+id/left_drawer"
@@ -30,6 +31,7 @@
             android:divider="@android:color/darker_gray"
             android:dividerHeight="0.1dp"
             android:background="#cccc"/>
+
     </android.support.v4.widget.DrawerLayout>
 
 

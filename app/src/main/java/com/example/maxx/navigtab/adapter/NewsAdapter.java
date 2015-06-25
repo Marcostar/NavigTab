@@ -1,6 +1,7 @@
 package com.example.maxx.navigtab.adapter;
 
 import android.app.Activity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,8 +83,8 @@ public class NewsAdapter extends BaseAdapter {
             viewHolder.thumbnail.setImageUrl(news.getThumbnailUrl(), imageLoader);
         }
 
-        viewHolder.title.setText(news.getTitle());
-        viewHolder.name.setText(news.getNewspaperName());
+        viewHolder.title.setText(Html.fromHtml(news.getTitle()));
+        viewHolder.name.setText(Html.fromHtml(news.getNewspaperName()));
 
         return convertView;
     }

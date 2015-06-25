@@ -35,11 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by maxx on 17/6/15.
+ * Created by maxx on 25/6/15.
  */
-public class National extends Fragment {
+public class SingleTopStories extends Fragment {
+    private static final String TAG = TopStories.class.getSimpleName();
+
     private static final String StoryType = "TopStories.php";
-    private String url = "http://192.168.1.5/simplepie/India";
+    private String url = "http://192.168.1.4/simplepie/India";
     SharedPreferences sharedPreferences;
     private String language;
     private ProgressDialog loadDialog;
@@ -51,7 +53,7 @@ public class National extends Fragment {
     {
         View rootview = inflater.inflate(R.layout.categorized_list,container,false);
         sharedPreferences = this.getActivity().getSharedPreferences("PreferenceSETTING", Context.MODE_PRIVATE);
-        language = sharedPreferences.getString("LANGUAGE", "English");
+        language = sharedPreferences.getString("LANGUAGE","English");
         listView = (ListView) rootview.findViewById(R.id.cat_list);
         newsAdapter = new NewsAdapter(getActivity(),newsArticlesList);
         listView.setAdapter(newsAdapter);
@@ -61,8 +63,17 @@ public class National extends Fragment {
                 String NewsPaperName = newsArticlesList.get(position).getNewspaperName();
                 String Title = newsArticlesList.get(position).getTitle();
                 String ThumbnailURL = newsArticlesList.get(position).getThumbnailUrl();
+                String Content = newsArticlesList.get(position).getcontent();
+                String ArticleLink = newsArticlesList.get(position).getArticleLink();
 
+                //Pass the values to another activity
                 Intent intent = new Intent(getActivity(), CategorisedDetails.class);
+                intent.putExtra("NewsPaperName",NewsPaperName);
+                intent.putExtra("Title",Title);
+                intent.putExtra("ThumbnailURL",ThumbnailURL);
+                intent.putExtra("Content",Content);
+                intent.putExtra("ArticleLink",ArticleLink);
+
                 startActivity(intent);
             }
         });
@@ -77,17 +88,23 @@ public class National extends Fragment {
                 hideDialog();
                 try {
                     JSONArray NewsItems = response.getJSONArray("NewsItems");
-                    Log.d(MainActivity.class.getSimpleName(),NewsItems.toString());
+                    Log.d(MainActivity.class.getSimpleName(), NewsItems.toString());
                     for(int i = 0;i<NewsItems.length();i++)
                     {
                         JSONObject object = NewsItems.getJSONObject(i);
                         NewsArticles news = new NewsArticles();
-                        //news.setArticleLink(object.getString("ArticleLink"));
+
                         news.setTitle(object.getString("Title"));
-                        //news.setContent(object.getString("Content"));
+
                         news.setNewspaperName(object.getString("Source"));
-                        //Image Extraction
+
                         Document doc = Jsoup.parse(object.getString("Content"));
+                        news.setcontent(doc.text());
+
+                        news.setArticleLink(object.getString("ArticleLink"));
+
+                        //Image Extraction
+                        doc = Jsoup.parse(object.getString("Content"));
                         Elements link = doc.select("img");
                         if(link.attr("src")!= null)
                         {
@@ -96,6 +113,7 @@ public class National extends Fragment {
                         else {
                             news.setThumbnailUrl(null);
                         }
+
                         newsArticlesList.add(news);
                     }
 
@@ -111,7 +129,7 @@ public class National extends Fragment {
                 hideDialog();
             }
         });
-        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(5000, 5, 1f));
+        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(5000,5,1f));
         MySingleton.getInstance(getActivity()).addToRequestQueue(topStoriesRequest);
 
         return rootview;
