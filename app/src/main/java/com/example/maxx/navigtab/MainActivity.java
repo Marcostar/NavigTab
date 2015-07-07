@@ -1,9 +1,11 @@
 package com.example.maxx.navigtab;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -12,15 +14,18 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.example.maxx.navigtab.adapter.DrawerListAdapter;
-import com.example.maxx.navigtab.fragments.SlidingTab;
 import com.example.maxx.navigtab.fragments.IndividualPaper;
+import com.example.maxx.navigtab.fragments.SlidingTab;
 import com.example.maxx.navigtab.model.NavigationDrawerItem;
 
 import java.util.ArrayList;
@@ -39,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerListAdapter adapter;
     private Toolbar toolbar;
+    private String[] editions;
+    private String selectedEdition;
 
     public static final String PreferenceSETTINGS = "Preferences";
     public static final String LANGUAGE = "English";
@@ -132,6 +139,61 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.change_edition)
+        {
+            final SharedPreferences.Editor editor = sharedPreferences.edit();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = this.getLayoutInflater();
+
+            View dialogView = inflater.inflate(R.layout.change_edition,null);
+            builder.setView(dialogView);
+            builder.setTitle(R.string.edition_Changer);
+            Spinner spinner = (Spinner) dialogView.findViewById(R.id.edition_spinner);
+            ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.edition_array, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    editions = getResources().getStringArray(R.array.edition_array);
+
+                    selectedEdition = editions[position];
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    editor.putString(LANGUAGE, selectedEdition);
+                    editor.commit();
+                    if (Build.VERSION.SDK_INT >= 11) {
+                        recreate();
+                    } else {
+                        Intent intent = getIntent();
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        finish();
+                        overridePendingTransition(0, 0);
+
+                        startActivity(intent);
+                        overridePendingTransition(0, 0);
+                    }
+                }
+            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.create().show();
+
+            return true;
+
+        }
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -201,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Read Enough?")
                 .setCancelable(false)
                 .setMessage("Are you sure you want to stop reading?")

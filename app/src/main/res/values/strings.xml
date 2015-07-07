@@ -2,6 +2,10 @@
     <string name="app_name">NavigTab</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="change_edition">Change Edition</string>
+    <string name="ok">Okay</string>
+    <string name="cancel">Cancel</string>
+    <string name="edition_Changer">Choose a Version</string>
 
     <string-array name="nav_titles">
         <item>Categorized</item>
@@ -11,6 +15,15 @@
     <string-array name="nav_icon">
         <item>@mipmap/categorized</item>
         <item>@mipmap/ic_launcher</item>
+    </string-array>
+
+    <string-array name="edition_array">
+        <item>English</item>
+        <item>Hindi</item>
+        <item>Kannada</item>
+        <item>Malayalam</item>
+        <item>Marathi</item>
+        <item>Tamil</item>
     </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>

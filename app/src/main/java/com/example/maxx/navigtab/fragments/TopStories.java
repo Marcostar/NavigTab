@@ -52,8 +52,8 @@ public class TopStories extends Fragment {
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootview = inflater.inflate(R.layout.categorized_list,container,false);
-        sharedPreferences = this.getActivity().getSharedPreferences("PreferenceSETTING",Context.MODE_PRIVATE);
-        language = sharedPreferences.getString("LANGUAGE","English");
+        sharedPreferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS,Context.MODE_PRIVATE);
+        language = sharedPreferences.getString(MainActivity.LANGUAGE, "English");
         listView = (ListView) rootview.findViewById(R.id.cat_list);
         newsAdapter = new NewsAdapter(getActivity(),newsArticlesList);
         listView.setAdapter(newsAdapter);
