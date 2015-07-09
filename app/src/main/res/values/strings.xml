@@ -6,15 +6,19 @@
     <string name="ok">Okay</string>
     <string name="cancel">Cancel</string>
     <string name="edition_Changer">Choose a Version</string>
+    <string name="feedback">Feedback/Demands</string>
+    <string name="rating">Rate It</string>
 
     <string-array name="nav_titles">
         <item>Categorized</item>
         <item>Individual</item>
+        <item>Share</item>
     </string-array>
 
     <string-array name="nav_icon">
         <item>@mipmap/categorized</item>
         <item>@mipmap/ic_launcher</item>
+        <item>@mipmap/ic_action_share</item>
     </string-array>
 
     <string-array name="edition_array">

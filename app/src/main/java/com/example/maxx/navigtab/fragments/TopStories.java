@@ -42,7 +42,7 @@ public class TopStories extends Fragment {
 
     private static final String StoryType = "TopStories.php";
     private String url = "http://192.168.1.4/simplepie/India";
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
     private String language;
     private ProgressDialog loadDialog;
     private ListView listView;
@@ -53,7 +53,7 @@ public class TopStories extends Fragment {
     {
         View rootview = inflater.inflate(R.layout.categorized_list,container,false);
         sharedPreferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS,Context.MODE_PRIVATE);
-        language = sharedPreferences.getString(MainActivity.LANGUAGE, "English");
+        language = sharedPreferences.getString(MainActivity.LANGUAGE,"English");
         listView = (ListView) rootview.findViewById(R.id.cat_list);
         newsAdapter = new NewsAdapter(getActivity(),newsArticlesList);
         listView.setAdapter(newsAdapter);

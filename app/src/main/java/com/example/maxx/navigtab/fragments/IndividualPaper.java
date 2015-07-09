@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.maxx.navigtab.IndividualPaperTabs;
+import com.example.maxx.navigtab.MainActivity;
 import com.example.maxx.navigtab.MySingleton;
 import com.example.maxx.navigtab.R;
 import com.example.maxx.navigtab.adapter.NewsPaperAdapter;
@@ -49,8 +50,8 @@ public class IndividualPaper extends Fragment
         View rootView =  inflater.inflate(R.layout.individual_paper_list,
                 container, false);
         listView = (ListView) rootView.findViewById(R.id.NewsPaperList);
-        preferences = this.getActivity().getSharedPreferences("PreferenceSETTING", Context.MODE_PRIVATE);
-        language = preferences.getString("LANGUAGE","English");
+        preferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS , Context.MODE_PRIVATE);
+        language = preferences.getString(MainActivity.LANGUAGE, "English");
         adapter = new NewsPaperAdapter(getActivity(), papersList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

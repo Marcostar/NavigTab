@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String PreferenceSETTINGS = "Preferences";
     public static final String LANGUAGE = "English";
     SharedPreferences sharedPreferences ;
+    SharedPreferences.Editor editor;
     public String URL="http://192.168.1.4/GetNews/";
 
 
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
         NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-
+        NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[2],navMenuIcons.getResourceId(2,-1)));
         navMenuIcons.recycle();
 
 
@@ -141,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.change_edition)
         {
-            final SharedPreferences.Editor editor = sharedPreferences.edit();
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            editor = sharedPreferences.edit();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             LayoutInflater inflater = this.getLayoutInflater();
 
             View dialogView = inflater.inflate(R.layout.change_edition,null);
@@ -193,6 +194,20 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
 
+        }
+        if(id == R.id.feedback)
+        {
+            Intent Email = new Intent(Intent.ACTION_SEND);
+            Email.setType("text/email");
+            Email.putExtra(Intent.EXTRA_EMAIL, new String[] { "admin@hotmail.com" });
+            Email.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+            Email.putExtra(Intent.EXTRA_TEXT, "Dear ...," + "");
+            startActivity(Intent.createChooser(Email, "Send Feedback:"));
+            return true;
+        }
+        if (id == R.id.rating)
+        {
+            return true;
         }
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -247,6 +262,16 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerList.setItemChecked(position, true);
                 setTitle(navMenuTitles[position]);
                 mDrawerLayout.closeDrawer(mDrawerList);
+                break;
+
+            case 2:
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+
                 break;
         }
         // Highlight the selected item, update the title, and close the drawer
