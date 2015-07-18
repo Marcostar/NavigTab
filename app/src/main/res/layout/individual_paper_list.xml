@@ -6,14 +6,60 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context="com.example.maxx.navigtab.Language">
 
-    <ListView
-        android:id="@+id/NewsPaperList"
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
-        android:background="@android:color/background_light"
-        android:dividerHeight="1dp"
-        >
-    </ListView>
+        android:layout_height="match_parent"
+        android:paddingBottom="2dp">
+
+        <ListView
+            android:id="@+id/NewsPaperList"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="1dp"
+            android:background="@android:color/background_light"
+            android:divider="@color/list_divider">
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/NewsPaperLoading"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:gravity="center"
+        android:paddingBottom="2dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/PaperListLoading"
+            android:textSize="18sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/NewsPaperLoadingError"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="2dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/volleyErrorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/PaperLoadingError"
+            android:textSize="18sp"/>
+    </LinearLayout>
 
 </RelativeLayout>

@@ -1,17 +1,19 @@
 package com.example.maxx.navigtab.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
@@ -38,23 +40,38 @@ import java.util.List;
  * Created by maxx on 25/6/15.
  */
 public class SingleTopStories extends Fragment {
-    private static final String TAG = TopStories.class.getSimpleName();
-
-    private static final String StoryType = "TopStories.php";
-    private String url = "http://192.168.1.4/simplepie/India";
-    SharedPreferences sharedPreferences;
-    private String language;
-    private ProgressDialog loadDialog;
+    private static final String TAG = SingleTopStories.class.getSimpleName();
+    private String url;
+    private SharedPreferences sharedPreferences;
     private ListView listView;
     private List<NewsArticles> newsArticlesList = new ArrayList<NewsArticles>();
     private NewsAdapter newsAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private LinearLayout layout,articleLoading;
+
 
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View rootview = inflater.inflate(R.layout.categorized_list,container,false);
-        sharedPreferences = this.getActivity().getSharedPreferences("PreferenceSETTING", Context.MODE_PRIVATE);
-        language = sharedPreferences.getString("LANGUAGE","English");
+        final View rootview = inflater.inflate(R.layout.categorized_list,container,false);
+        sharedPreferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
+        url = sharedPreferences.getString(MainActivity.TOPSTORIESURL, null);
         listView = (ListView) rootview.findViewById(R.id.cat_list);
+        layout = (LinearLayout) rootview.findViewById(R.id.VolleyError);
+        articleLoading = (LinearLayout) rootview.findViewById(R.id.articleLoading);
+        // Retrieve the SwipeRefreshLayout and ListView instances
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootview.findViewById(R.id.swipeRefresh);
+
+        // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.swipe_color_1, R.color.swipe_color_2,
+                R.color.swipe_color_3, R.color.swipe_color_4);
+        //Requesting News now
+
+        return rootview;
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         newsAdapter = new NewsAdapter(getActivity(),newsArticlesList);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -68,25 +85,46 @@ public class SingleTopStories extends Fragment {
 
                 //Pass the values to another activity
                 Intent intent = new Intent(getActivity(), CategorisedDetails.class);
-                intent.putExtra("NewsPaperName",NewsPaperName);
-                intent.putExtra("Title",Title);
-                intent.putExtra("ThumbnailURL",ThumbnailURL);
-                intent.putExtra("Content",Content);
-                intent.putExtra("ArticleLink",ArticleLink);
+                intent.putExtra("NewsPaperName", NewsPaperName);
+                intent.putExtra("Title", Title);
+                intent.putExtra("ThumbnailURL", ThumbnailURL);
+                intent.putExtra("Content", Content);
+                intent.putExtra("ArticleLink", ArticleLink);
 
                 startActivity(intent);
             }
         });
+        articleLoading.setVisibility(View.VISIBLE);
 
-        loadDialog = new ProgressDialog(getActivity());
-        loadDialog.setMessage("Getting Stories...");
-        loadDialog.show();
-        //Requesting News now
-        JsonObjectRequest topStoriesRequest = new JsonObjectRequest(url+language+StoryType, null, new Response.Listener<JSONObject>() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                layout.setVisibility(View.GONE);
+                initiateRefresh();
+            }
+        });
+
+
+        initiateRefresh();
+
+        /*mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                initiateRefresh();
+            }
+        });*/
+    }
+
+    private void initiateRefresh() {
+
+        mSwipeRefreshLayout.setRefreshing(true);
+
+        final JsonObjectRequest topStoriesRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                hideDialog();
                 try {
+                    articleLoading.setVisibility(View.GONE);
                     JSONArray NewsItems = response.getJSONArray("NewsItems");
                     Log.d(MainActivity.class.getSimpleName(), NewsItems.toString());
                     for(int i = 0;i<NewsItems.length();i++)
@@ -121,32 +159,39 @@ public class SingleTopStories extends Fragment {
                     e.printStackTrace();
                 }
                 newsAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                articleLoading.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
+                Log.d(TAG, volleyError.toString());
 
-                hideDialog();
+
+                if((newsArticlesList.isEmpty())&& (MainActivity.isOnline()== false) )
+                {
+                    layout.setVisibility(View.VISIBLE);
+                }
+                else if(MainActivity.isOnline()==false)
+                {
+                    Toast.makeText(getActivity(), "Check Your Internet Connection", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
-        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(5000,5,1f));
+        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(5000, 5, 1f));
         MySingleton.getInstance(getActivity()).addToRequestQueue(topStoriesRequest);
 
-        return rootview;
     }
+
     public void onDestroy()
     {
         super.onDestroy();
-        hideDialog();
+
     }
 
-    private void hideDialog() {
-        if(loadDialog!=null)
-        {
-            loadDialog.dismiss();
-            loadDialog = null;
-        }
-    }
 
 
 }

@@ -1,16 +1,19 @@
 package com.example.maxx.navigtab.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
@@ -35,13 +38,16 @@ import java.util.List;
  */
 public class IndividualPaper extends Fragment
 {
+    private static final String TAG = IndividualPaper.class.getSimpleName();
     private static final String StoryType = "NewsPaper.php";
-    private String url = "http://192.168.1.3/GetNews/India";
+    private String url = "http://192.168.1.6/GetNews/India";
     private ListView listView;
     private List<NewsPapers> papersList = new ArrayList<>();
     private NewsPaperAdapter adapter;
-    private ProgressDialog dialog;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+    private LinearLayout NewspaperLoading,LoadingError;
     private String language;
 
     @Override
@@ -49,28 +55,66 @@ public class IndividualPaper extends Fragment
     {
         View rootView =  inflater.inflate(R.layout.individual_paper_list,
                 container, false);
+        NewspaperLoading = (LinearLayout) rootView.findViewById(R.id.NewsPaperLoading);
+        LoadingError = (LinearLayout) rootView.findViewById(R.id.NewsPaperLoadingError);
+        preferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
+        editor = preferences.edit();
         listView = (ListView) rootView.findViewById(R.id.NewsPaperList);
-        preferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS , Context.MODE_PRIVATE);
         language = preferences.getString(MainActivity.LANGUAGE, "English");
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
+
+        // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.swipe_color_1, R.color.swipe_color_2,
+                R.color.swipe_color_3, R.color.swipe_color_4);
+        return rootView;
+
+    }
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
         adapter = new NewsPaperAdapter(getActivity(), papersList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), IndividualPaperTabs.class);
+                editor.putString(MainActivity.TOPSTORIESURL, papersList.get(position).getTopStoriesURL());
+                editor.putString(MainActivity.NATIONALURL, papersList.get(position).getTopStoriesURL());
+                editor.putString(MainActivity.WORLDURL, papersList.get(position).getTopStoriesURL());
+                editor.putString(MainActivity.SPORTURL, papersList.get(position).getTopStoriesURL());
+                editor.putString(MainActivity.ENTERTAINMENTURL, papersList.get(position).getTopStoriesURL());
+                editor.putString(MainActivity.BUSINESSURL, papersList.get(position).getTopStoriesURL());
+                editor.commit();
                 String NewspaperName = papersList.get(position).getNewsPaperName();
-                intent.putExtra("NewsPaperName",NewspaperName);
+                intent.putExtra("NewsPaperName", NewspaperName);
                 startActivity(intent);
             }
         });
-        dialog = new ProgressDialog(getActivity());
-        dialog.show();
+        NewspaperLoading.setVisibility(View.VISIBLE);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                LoadingError.setVisibility(View.GONE);
+                initiate();
+            }
+        });
+
+        initiate();
+
+
+    }
+
+    private void initiate()
+    {
+        mSwipeRefreshLayout.setRefreshing(true);
 
         JsonObjectRequest request = new JsonObjectRequest(url + language + StoryType, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response)
             {
-                hideDialog();
+                NewspaperLoading.setVisibility(View.GONE);
                 try {
                     JSONArray array = response.getJSONArray("NewsPaper");
                     for(int i = 0;i<array.length();i++)
@@ -90,30 +134,36 @@ public class IndividualPaper extends Fragment
                     e.printStackTrace();
                 }
                 adapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+
+                NewspaperLoading.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
+                Log.d(TAG, volleyError.toString());
+
+
+                if((papersList.isEmpty())&& (MainActivity.isOnline()== false) )
+                {
+                    LoadingError.setVisibility(View.VISIBLE);
+                }
+                else if(MainActivity.isOnline()==false)
+                {
+                    Toast.makeText(getActivity(), "Check Your Internet Connection", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
         request.setRetryPolicy(new DefaultRetryPolicy(5000,5,1f));
         MySingleton.getInstance(getActivity()).addToRequestQueue(request);
 
-        return rootView;
-
     }
+
     public void onDestroy()
     {
         super.onDestroy();
-        hideDialog();
     }
 
-    private void hideDialog() {
-        if(dialog!=null)
-        {
-            dialog.dismiss();
-            dialog = null;
-        }
-    }
 }

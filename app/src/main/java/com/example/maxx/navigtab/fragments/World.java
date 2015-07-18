@@ -37,10 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by maxx on 17/6/15.
+ * Created by Santosh on 7/15/2015.
  */
-public class National extends Fragment {
-    private static final String TAG = National.class.getSimpleName();
+public class World extends Fragment {
+    private static final String TAG = TopStories.class.getSimpleName();
 
     private static final String StoryType = "TopStories.php";
     private String url = "http://192.168.1.6/simplepie/India";
@@ -50,7 +50,7 @@ public class National extends Fragment {
     private List<NewsArticles> newsArticlesList = new ArrayList<NewsArticles>();
     private NewsAdapter newsAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private LinearLayout layout,articleLoading;
+    private LinearLayout loadingError,articleLoading;
 
 
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -59,7 +59,7 @@ public class National extends Fragment {
         sharedPreferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
         language = sharedPreferences.getString(MainActivity.LANGUAGE, "English");
         listView = (ListView) rootview.findViewById(R.id.cat_list);
-        layout = (LinearLayout) rootview.findViewById(R.id.VolleyError);
+        loadingError = (LinearLayout) rootview.findViewById(R.id.VolleyError);
         articleLoading = (LinearLayout) rootview.findViewById(R.id.articleLoading);
         // Retrieve the SwipeRefreshLayout and ListView instances
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootview.findViewById(R.id.swipeRefresh);
@@ -102,7 +102,7 @@ public class National extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                layout.setVisibility(View.GONE);
+                loadingError.setVisibility(View.GONE);
                 initiateRefresh();
             }
         });
@@ -175,7 +175,7 @@ public class National extends Fragment {
 
                 if((newsArticlesList.isEmpty())&& (MainActivity.isOnline()== false) )
                 {
-                    layout.setVisibility(View.VISIBLE);
+                    loadingError.setVisibility(View.VISIBLE);
                 }
                 else if(MainActivity.isOnline()==false)
                 {
@@ -194,4 +194,7 @@ public class National extends Fragment {
         super.onDestroy();
 
     }
+
+
+
 }

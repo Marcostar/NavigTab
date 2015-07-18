@@ -37,15 +37,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by maxx on 17/6/15.
+ * Created by Santosh on 7/15/2015.
  */
-public class National extends Fragment {
-    private static final String TAG = National.class.getSimpleName();
-
-    private static final String StoryType = "TopStories.php";
-    private String url = "http://192.168.1.6/simplepie/India";
+public class SingleNational extends Fragment {
+    private static final String TAG = SingleNational.class.getSimpleName();
+    private String url;
     private SharedPreferences sharedPreferences;
-    private String language;
     private ListView listView;
     private List<NewsArticles> newsArticlesList = new ArrayList<NewsArticles>();
     private NewsAdapter newsAdapter;
@@ -57,7 +54,7 @@ public class National extends Fragment {
     {
         final View rootview = inflater.inflate(R.layout.categorized_list,container,false);
         sharedPreferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
-        language = sharedPreferences.getString(MainActivity.LANGUAGE, "English");
+        url = sharedPreferences.getString(MainActivity.NATIONALURL, null);
         listView = (ListView) rootview.findViewById(R.id.cat_list);
         layout = (LinearLayout) rootview.findViewById(R.id.VolleyError);
         articleLoading = (LinearLayout) rootview.findViewById(R.id.articleLoading);
@@ -123,7 +120,7 @@ public class National extends Fragment {
 
         mSwipeRefreshLayout.setRefreshing(true);
 
-        final JsonObjectRequest topStoriesRequest = new JsonObjectRequest(url+language+StoryType, null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest topStoriesRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -184,7 +181,7 @@ public class National extends Fragment {
 
             }
         });
-        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(5000,5,1f));
+        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(5000, 5, 1f));
         MySingleton.getInstance(getActivity()).addToRequestQueue(topStoriesRequest);
 
     }
@@ -194,4 +191,8 @@ public class National extends Fragment {
         super.onDestroy();
 
     }
+
+
+
 }
+

@@ -28,6 +28,7 @@ import com.example.maxx.navigtab.fragments.IndividualPaper;
 import com.example.maxx.navigtab.fragments.SlidingTab;
 import com.example.maxx.navigtab.model.NavigationDrawerItem;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -49,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String PreferenceSETTINGS = "Preferences";
     public static final String LANGUAGE = "English";
+    public static final String TOPSTORIESURL = null;
+    public static final String NATIONALURL = null;
+    public static final String WORLDURL = null;
+    public static final String SPORTURL = null;
+    public static final String ENTERTAINMENTURL = null;
+    public static final String BUSINESSURL = null;
     SharedPreferences sharedPreferences ;
     SharedPreferences.Editor editor;
     public String URL="http://192.168.1.4/GetNews/";
@@ -60,60 +67,63 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        setSupportActionBar(toolbar);
-        mTitle = mDrawerTitle = getTitle();
-        sharedPreferences = getSharedPreferences(PreferenceSETTINGS, this.MODE_PRIVATE);
-        navMenuTitles = getResources().getStringArray(R.array.nav_titles);
-        navMenuIcons = getResources().obtainTypedArray(R.array.nav_icon);
+            toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+            setSupportActionBar(toolbar);
+            mTitle = mDrawerTitle = getTitle();
+            sharedPreferences = getSharedPreferences(PreferenceSETTINGS, this.MODE_PRIVATE);
+            navMenuTitles = getResources().getStringArray(R.array.nav_titles);
+            navMenuIcons = getResources().obtainTypedArray(R.array.nav_icon);
+            mDrawerList = (ListView) findViewById(R.id.left_drawer);
+            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.drawer_open,R.string.drawer_close){
+            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mTitle);
+                /**
+                 * Called when a drawer has settled in a completely closed state.
+                 */
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    getSupportActionBar().setTitle(mTitle);
+                }
+
+                /**
+                 * Called when a drawer has settled in a completely open state.
+                 */
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    getSupportActionBar().setTitle(mDrawerTitle);
+                }
+
+            };
+
+
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
+            NavigationDrawerItems = new ArrayList<>();
+
+            NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+            NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+            NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+            navMenuIcons.recycle();
+
+
+            adapter = new DrawerListAdapter(getApplicationContext(), NavigationDrawerItems);
+
+            mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+
+            mDrawerList.setAdapter(adapter);
+            //  mDrawerList.setItemChecked(mCurrentSelectedPosition, true);
+            if (savedInstanceState == null) {
+                selectItem(0);
             }
 
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(mDrawerTitle);
-            }
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
 
-        };
-
-
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-
-        NavigationDrawerItems = new ArrayList<>();
-
-        NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[2],navMenuIcons.getResourceId(2,-1)));
-        navMenuIcons.recycle();
-
-
-        adapter = new DrawerListAdapter(getApplicationContext(), NavigationDrawerItems);
-
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-
-
-        mDrawerList.setAdapter(adapter);
-      //  mDrawerList.setItemChecked(mCurrentSelectedPosition, true);
-        if (savedInstanceState == null) {
-            selectItem(0);
         }
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-    }
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
@@ -301,6 +311,21 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    public static boolean isOnline()
+    {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+
+        } catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+
+        return false;
     }
 
 }

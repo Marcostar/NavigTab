@@ -83,16 +83,17 @@ public class SlidingTab extends Fragment {
                     return new TopStories();
                 case 1:
                     return new National();
-                default:
-                    Fragment fragment = new DemoObjectFragment();
-                    Bundle args = new Bundle();
-                    // Our object is just an integer :-P
-                    args.putInt(DemoObjectFragment.ARG_OBJECT, position + 1);
-                    fragment.setArguments(args);
-                    return fragment;
-
+                case 2:
+                    return new World();
+                case 3:
+                    return new Sport();
+                case 4:
+                    return new Entertainment();
+                case 5:
+                    return new Business();
             }
 
+            return null;
         }
 
         @Override
@@ -112,23 +113,6 @@ public class SlidingTab extends Fragment {
                 case 5: return "BUSINESS";
             }
             return null;
-        }
-
-
-    }
-    public static class DemoObjectFragment extends Fragment {
-        public static final String ARG_OBJECT = "object";
-
-        @Override
-        public View onCreateView(LayoutInflater inflater,
-                                 ViewGroup container, Bundle savedInstanceState) {
-            // The last two arguments ensure LayoutParams are inflated
-            // properly.
-            View rootView = inflater.inflate(
-                    R.layout.test1, container, false);
-            Bundle args = getArguments();
-
-            return rootView;
         }
     }
 }
