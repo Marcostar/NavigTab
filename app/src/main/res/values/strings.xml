@@ -21,7 +21,7 @@
 
     <string-array name="nav_icon">
         <item>@mipmap/categorized</item>
-        <item>@mipmap/ic_launcher</item>
+        <item>@mipmap/individual</item>
         <item>@mipmap/ic_action_share</item>
     </string-array>
 
