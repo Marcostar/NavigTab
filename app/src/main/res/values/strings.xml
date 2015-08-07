@@ -22,7 +22,7 @@
     <string-array name="nav_icon">
         <item>@mipmap/categorized</item>
         <item>@mipmap/individual</item>
-        <item>@mipmap/ic_action_share</item>
+        <item>@mipmap/share</item>
     </string-array>
 
     <string-array name="edition_array">
