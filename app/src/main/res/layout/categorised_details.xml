@@ -42,6 +42,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/det_title"
+            android:textColor="@color/paper_name"
             android:layout_marginTop="1dip"
             android:layout_toRightOf="@+id/det_thumbnail"
             android:textSize="15dip" />
@@ -58,6 +59,5 @@
         android:scrollbars="vertical"
         android:background="@android:color/white"
         android:textSize="16dp"/>
-
 
 </RelativeLayout>

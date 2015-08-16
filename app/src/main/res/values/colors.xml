@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="list_divider">#d9d9d9</color>
-    <color name="swipe_color_1">#B6DB49</color>
-    <color name="swipe_color_2">#99CC00</color>
-    <color name="swipe_color_3">#8ABD00</color>
+    <color name="swipe_color_1">#006994</color>
+    <color name="swipe_color_2">#F94C00</color>
+    <color name="swipe_color_3">#1D8FFE</color>
     <color name="swipe_color_4">#7CAF00</color>
+    <color name="paper_name">#089DE3</color>
+
 
 </resources>

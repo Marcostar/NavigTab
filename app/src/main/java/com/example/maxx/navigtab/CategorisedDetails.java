@@ -30,7 +30,7 @@ public class CategorisedDetails extends AppCompatActivity {
         setContentView(R.layout.categorised_details);
 
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle("In Short");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

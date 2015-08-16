@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/cat_title"
         android:layout_marginTop="1dip"
+        android:textColor="@color/paper_name"
         android:layout_toRightOf="@+id/cat_thumbnail"
         android:textSize="15dip" />
 
