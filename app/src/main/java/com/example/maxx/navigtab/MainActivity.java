@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -106,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
             NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
             NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+            NavigationDrawerItems.add(new NavigationDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
             navMenuIcons.recycle();
 
 
@@ -275,6 +279,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case 2:
+
+                Intent getQuote = new Intent(this, GetExtra.class);
+                startActivity(getQuote);
+
+                break;
+
+
+            case 3:
 
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);

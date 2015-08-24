@@ -16,12 +16,14 @@
     <string-array name="nav_titles">
         <item>Categorized</item>
         <item>Individual</item>
-        <item>Share</item>
+        <item>Get Extra</item>
+        <item>Refer Friends</item>
     </string-array>
 
     <string-array name="nav_icon">
         <item>@mipmap/categorized</item>
         <item>@mipmap/individual</item>
+        <item>@mipmap/plus</item>
         <item>@mipmap/share</item>
     </string-array>
 
@@ -39,5 +41,6 @@
     <string name="title_activity_language">Select Language</string>
     <string name="title_activity_categorised_details">GetNews</string>
     <string name="title_activity_individual_paper_tabs">GetNews</string>
+    <string name="title_activity_get_extra">GetExtra</string>
 
 </resources>
