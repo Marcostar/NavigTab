@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
+import com.example.maxx.navigtab.R;
+
 /**
  * Created by maxx on 5/5/15.
  */
@@ -187,7 +189,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
             if (tabTitleView == null && TextView.class.isInstance(tabView)) {
                 tabTitleView = (TextView) tabView;
             }
-
+            if (tabTitleView != null) {
+                tabTitleView.setTextColor(getResources().getColor(R.color.tabs_text));
+            }
             tabTitleView.setText(adapter.getPageTitle(i));
             tabView.setOnClickListener(tabClickListener);
 

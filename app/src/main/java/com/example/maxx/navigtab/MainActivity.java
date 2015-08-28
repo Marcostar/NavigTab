@@ -172,7 +172,15 @@ public class MainActivity extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     editions = getResources().getStringArray(R.array.edition_array);
 
-                    selectedEdition = editions[position];
+                   /* selectedEdition = editions[position];*/
+                    if (editions[position] == "English")
+                    {
+                        selectedEdition = "India";
+                    }
+                    else
+                    {
+                        selectedEdition = editions[position];
+                    }
 
                 }
 

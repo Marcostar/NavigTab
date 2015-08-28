@@ -6,12 +6,14 @@ package com.example.maxx.navigtab.model;
 public class Quotes {
     private int ID;
     private String Quote;
+    private String TimeStamp;
 
     public Quotes() {
     }
 
-    public Quotes(String quote) {
+    public Quotes(String quote, String timeStamp) {
         Quote = quote;
+        TimeStamp = timeStamp;
     }
 
     public Quotes(int ID, String quote) {
@@ -33,5 +35,13 @@ public class Quotes {
 
     public void setQuote(String quote) {
         Quote = quote;
+    }
+
+    public String getTimeStamp() {
+        return TimeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        TimeStamp = timeStamp;
     }
 }

@@ -9,6 +9,7 @@
     <string name="feedback">Feedback/Demands</string>
     <string name="rating">Rate App</string>
     <string name="volleyError">No Internet. Pull down screen to retry.</string>
+    <string name="quoteError">You will receive Quotes, Fun Facts here daily. You will get some shortly.</string>
     <string name="stories">Getting Stories For You&#8230;</string>
     <string name="PaperListLoading">Gathering NewsPapers&#8230;</string>
     <string name="PaperLoadingError">No Internet. Pull down screen to retry.</string>

@@ -6,6 +6,9 @@
     <color name="swipe_color_3">#1D8FFE</color>
     <color name="swipe_color_4">#7CAF00</color>
     <color name="paper_name">#089DE3</color>
+    <color name="toolbar_color">#081F2C</color>
+    <color name="tabs_text">#FFFFFF</color>
+    <color name="tabs_background">#1F324A</color>
 
 
 </resources>

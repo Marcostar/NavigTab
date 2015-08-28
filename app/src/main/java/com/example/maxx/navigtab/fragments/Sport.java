@@ -41,8 +41,8 @@ import java.util.List;
  */
 public class Sport extends Fragment { private static final String TAG = TopStories.class.getSimpleName();
 
-    private static final String StoryType = "TopStories.php";
-    private String url = "http://192.168.1.6/simplepie/India";
+    private static final String StoryType = "Sports.php";
+    private String url = "http://ft.sagycorp.com/SimplePie/";
     private SharedPreferences sharedPreferences;
     private String language;
     private ListView listView;
@@ -56,7 +56,7 @@ public class Sport extends Fragment { private static final String TAG = TopStori
     {
         final View rootview = inflater.inflate(R.layout.categorized_list,container,false);
         sharedPreferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
-        language = sharedPreferences.getString(MainActivity.LANGUAGE, "English");
+        language = sharedPreferences.getString(MainActivity.LANGUAGE, "India");
         listView = (ListView) rootview.findViewById(R.id.cat_list);
         loadingError = (LinearLayout) rootview.findViewById(R.id.VolleyError);
         articleLoading = (LinearLayout) rootview.findViewById(R.id.articleLoading);

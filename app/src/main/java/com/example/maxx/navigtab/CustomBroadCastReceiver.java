@@ -12,6 +12,11 @@ import com.parse.ParsePushBroadcastReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by Dzeko on 8/17/2015.
  */
@@ -32,7 +37,7 @@ public class CustomBroadCastReceiver extends ParsePushBroadcastReceiver {
     @Override
     protected void onPushReceive(Context context, Intent intent)
     {
-        super.onPushReceive(context,intent);
+        super.onPushReceive(context, intent);
         MySQLiteHelper mySQLiteHelper = new MySQLiteHelper(context);
         if(intent == null)
         {
@@ -42,7 +47,8 @@ public class CustomBroadCastReceiver extends ParsePushBroadcastReceiver {
         try {
             JSONObject notification = new JSONObject(intent.getExtras().getString("com.parse.Data"));
             String notificationReceived = notification.getString("alert");
-            mySQLiteHelper.addQuotes(new Quotes(notificationReceived));
+            String timeStamp = Stamp();
+            mySQLiteHelper.addQuotes(new Quotes(notificationReceived,timeStamp));
             Log.d(TAG, notificationReceived);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -56,6 +62,17 @@ public class CustomBroadCastReceiver extends ParsePushBroadcastReceiver {
 
     @Override
     protected void onPushOpen(Context context, Intent intent) {
-        super.onPushOpen(context,intent);
+        super.onPushOpen(context, intent);
+    }
+
+    public String Stamp()
+    {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm a");
+
+        Date today = Calendar.getInstance().getTime();
+
+        String timeStamp = dateFormat.format(today);
+
+        return timeStamp;
     }
 }

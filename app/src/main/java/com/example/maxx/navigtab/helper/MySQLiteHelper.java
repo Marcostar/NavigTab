@@ -19,14 +19,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String TABLE_EXTRAS = "extras";
     public static final String COLUMN_ID = "ID";
     public static final String COLUMN_QUOTE = "QUOTE";
+    public static final String COLUMN_TIMESTAMP = "TIMESTAMP";
 
     private static final String DATABASE_NAME = "extras.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String DATABASE_CREATE = "create table "
             + TABLE_EXTRAS + "(" + COLUMN_ID
             + " integer primary key autoincrement, " + COLUMN_QUOTE
-            + " text not null);";
+            + " text not null, " + COLUMN_TIMESTAMP + " text not null);";
 
     public MySQLiteHelper(Context context)
     {
@@ -49,8 +50,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        //values.put(COLUMN_ID, quotes.getID()); // Contact Name
-        values.put(COLUMN_QUOTE, quotes.getQuote()); // Contact Phone
+        values.put(COLUMN_QUOTE, quotes.getQuote()); // Quotes
+        values.put(COLUMN_TIMESTAMP,quotes.getTimeStamp());
 
         // Inserting Row
         db.insert(TABLE_EXTRAS, null, values);
@@ -70,6 +71,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 Quotes quotes = new Quotes();
                 quotes.setID(Integer.parseInt(cursor.getString(0)));
                 quotes.setQuote(cursor.getString(1));
+                quotes.setTimeStamp(cursor.getString(2));
                 // Adding contact to list
                 QuoteList.add(quotes);
             } while (cursor.moveToNext());

@@ -5,9 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.example.maxx.navigtab.adapter.QuoteAdapter;
 import com.example.maxx.navigtab.helper.MySQLiteHelper;
 import com.example.maxx.navigtab.model.Quotes;
 
@@ -18,10 +20,14 @@ public class GetExtra extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ListView listView;
+    private List<Quotes> QuoteList;
+    private QuoteAdapter adapter;
+    private LinearLayout QuoteErrorLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.get_extra);
+        QuoteErrorLayout = (LinearLayout) findViewById(R.id.QuoteError);
         listView = (ListView) findViewById(R.id.quoteList);
         MySQLiteHelper helper = new MySQLiteHelper(this);
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
@@ -29,16 +35,21 @@ public class GetExtra extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        List<Quotes> quotes = helper.getAllQuotes();
-        List<String> values = new ArrayList<>();
-        for (Quotes qn : quotes)
+        QuoteList = new ArrayList<>(helper.getAllQuotes());
+        if (QuoteList.size()==0)
+        {
+            QuoteErrorLayout.setVisibility(View.VISIBLE);
+        }
+        adapter = new QuoteAdapter(this,QuoteList);
+        listView.setAdapter(adapter);
+        /*for (Quotes qn : QuoteList)
         {
             values.add(qn.getQuote());
-        }
+        }*/
         helper.close();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, values);
-        listView.setAdapter(adapter);
+/*        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, values);*/
+        adapter.notifyDataSetChanged();
     }
 
     @Override

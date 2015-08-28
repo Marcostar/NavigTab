@@ -8,11 +8,37 @@
         android:id="@+id/my_awesome_toolbar"
         layout="@layout/toolbar"
         />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/my_awesome_toolbar">
     <ListView
         android:id="@+id/quoteList"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/my_awesome_toolbar">
+        android:dividerHeight="2dp"
+        android:divider="@android:color/transparent">
     </ListView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/QuoteError"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_below="@+id/my_awesome_toolbar"
+        android:gravity="center">
+
+        <TextView
+            android:padding="10dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/quoteError"
+            android:textSize="18sp"
+            android:gravity="center" />
+    </LinearLayout>
 
 </RelativeLayout>
