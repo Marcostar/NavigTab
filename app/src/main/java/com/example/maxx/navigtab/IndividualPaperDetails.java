@@ -1,6 +1,5 @@
 package com.example.maxx.navigtab;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,8 +14,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.maxx.navigtab.model.SentenceMinimizer;
 
-
-public class CategorisedDetails extends AppCompatActivity {
+public class IndividualPaperDetails extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TextView title;
@@ -89,9 +87,9 @@ public class CategorisedDetails extends AppCompatActivity {
         }
         if (id == android.R.id.home)
         {
-            Intent upIntent = new Intent(this, MainActivity.class);
+            /*Intent upIntent = new Intent(this, IndividualPaperTabs.class);
             upIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(upIntent);
+            startActivity(upIntent);*/
             finish();
             return true;
         }
@@ -99,3 +97,4 @@ public class CategorisedDetails extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+

@@ -16,7 +16,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.maxx.navigtab.IndividualPaperTabs;
@@ -39,8 +41,8 @@ import java.util.List;
 public class IndividualPaper extends Fragment
 {
     private static final String TAG = IndividualPaper.class.getSimpleName();
-    private static final String StoryType = "NewsPaper.php";
-    private String url = "http://192.168.1.6/GetNews/India";
+    private static final String StoryType = ".php";
+    private String url = "http://ft.sagycorp.com/GetNews/";
     private ListView listView;
     private List<NewsPapers> papersList = new ArrayList<>();
     private NewsPaperAdapter adapter;
@@ -57,10 +59,9 @@ public class IndividualPaper extends Fragment
                 container, false);
         NewspaperLoading = (LinearLayout) rootView.findViewById(R.id.NewsPaperLoading);
         LoadingError = (LinearLayout) rootView.findViewById(R.id.NewsPaperLoadingError);
-        preferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
-        editor = preferences.edit();
+        preferences = getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
         listView = (ListView) rootView.findViewById(R.id.NewsPaperList);
-        language = preferences.getString(MainActivity.LANGUAGE, "English");
+        language = preferences.getString(MainActivity.LANGUAGE, "India");
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
 
         // Set the color scheme of the SwipeRefreshLayout by providing 4 color resource ids
@@ -79,13 +80,15 @@ public class IndividualPaper extends Fragment
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), IndividualPaperTabs.class);
+                editor = preferences.edit();
+                editor.putString(MainActivity.PAPERNAME, papersList.get(position).getNewsPaperName());
                 editor.putString(MainActivity.TOPSTORIESURL, papersList.get(position).getTopStoriesURL());
-                editor.putString(MainActivity.NATIONALURL, papersList.get(position).getTopStoriesURL());
-                editor.putString(MainActivity.WORLDURL, papersList.get(position).getTopStoriesURL());
-                editor.putString(MainActivity.SPORTURL, papersList.get(position).getTopStoriesURL());
-                editor.putString(MainActivity.ENTERTAINMENTURL, papersList.get(position).getTopStoriesURL());
-                editor.putString(MainActivity.BUSINESSURL, papersList.get(position).getTopStoriesURL());
-                editor.commit();
+                editor.putString(MainActivity.NATIONALURL, papersList.get(position).getNationalURL());
+                editor.putString(MainActivity.WORLDURL, papersList.get(position).getWorldURL());
+                editor.putString(MainActivity.SPORTURL, papersList.get(position).getSportURL());
+                editor.putString(MainActivity.ENTERTAINMENTURL, papersList.get(position).getEntertainmentURL());
+                editor.putString(MainActivity.BUSINESSURL, papersList.get(position).getBusinessURL());
+                editor.apply();
                 String NewspaperName = papersList.get(position).getNewsPaperName();
                 intent.putExtra("NewsPaperName", NewspaperName);
                 startActivity(intent);
@@ -109,7 +112,7 @@ public class IndividualPaper extends Fragment
     private void initiate()
     {
         mSwipeRefreshLayout.setRefreshing(true);
-
+        papersList.clear();
         JsonObjectRequest request = new JsonObjectRequest(url + language + StoryType, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response)
@@ -125,7 +128,7 @@ public class IndividualPaper extends Fragment
                         papers.setTopStoriesURL(object.getString("TopStoriesURL"));
                         papers.setNationalURL(object.getString("NationalURL"));
                         papers.setWorldURL(object.getString("WorldURL"));
-                        papers.setSportURL(object.getString("SportURL"));
+                        papers.setSportURL(object.getString("SportsURL"));
                         papers.setEntertainmentURL(object.getString("EntertainmentURL"));
                         papers.setBusinessURL(object.getString("BusinessURL"));
                         papersList.add(papers);
@@ -144,19 +147,24 @@ public class IndividualPaper extends Fragment
                 mSwipeRefreshLayout.setRefreshing(false);
                 Log.d(TAG, volleyError.toString());
 
-
-                if((papersList.isEmpty())&& (MainActivity.isOnline()== false) )
+                if(volleyError instanceof TimeoutError || volleyError instanceof NoConnectionError)
                 {
                     LoadingError.setVisibility(View.VISIBLE);
                 }
-                else if(MainActivity.isOnline()==false)
+
+
+                if((papersList.isEmpty())&& (!MainActivity.isOnline()) )
+                {
+                    LoadingError.setVisibility(View.VISIBLE);
+                }
+                else if(!MainActivity.isOnline())
                 {
                     Toast.makeText(getActivity(), "Check Your Internet Connection", Toast.LENGTH_LONG).show();
                 }
 
             }
         });
-        request.setRetryPolicy(new DefaultRetryPolicy(5000,5,1f));
+        request.setRetryPolicy(new DefaultRetryPolicy(4000,2,2f));
         MySingleton.getInstance(getActivity()).addToRequestQueue(request);
 
     }

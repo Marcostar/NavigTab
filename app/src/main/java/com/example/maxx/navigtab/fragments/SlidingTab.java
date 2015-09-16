@@ -105,10 +105,10 @@ public class SlidingTab extends Fragment {
         public CharSequence getPageTitle(int position) {
             switch (position)
             {
-                case 0: return "TOP STORIES ";
-                case 1: return "NATIONAL ";
+                case 0: return "TOP STORIES";
+                case 1: return "NATIONAL";
                 case 2: return "WORLD";
-                case 3: return "SPORT";
+                case 3: return "SPORTS";
                 case 4: return "ENTERTAINMENT";
                 case 5: return "BUSINESS";
             }

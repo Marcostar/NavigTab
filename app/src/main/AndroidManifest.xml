@@ -70,7 +70,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-<!--                   IMPORTANT: Change "com.parse.starter" to match your app's package name. -->
+                <!-- IMPORTANT: Change "com.parse.starter" to match your app's package name. -->
                 <category android:name="com.example.maxx.navigtab" />
             </intent-filter>
         </receiver>
@@ -82,6 +82,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.maxx.navigtab.MainActivity" />
+        </activity>
+        <activity
+            android:name=".IndividualPaperDetails"
+            android:label="@string/title_activity_individual_paper_details"
+            android:parentActivityName=".IndividualPaperTabs" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.maxx.navigtab.IndividualPaperTabs" />
         </activity>
     </application>
 

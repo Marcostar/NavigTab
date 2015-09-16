@@ -1,6 +1,8 @@
 package com.example.maxx.navigtab;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -12,13 +14,14 @@ import com.example.maxx.navigtab.fragments.SinglePaperSlidingTab;
 
 
 public class IndividualPaperTabs extends AppCompatActivity {
-
+    private SharedPreferences sharedPreferences;
     private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_individual_paper_tabs);
-        String NewspaperName = getIntent().getExtras().getString("NewsPaperName");
+        sharedPreferences = this.getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
+        String NewspaperName = sharedPreferences.getString(MainActivity.PAPERNAME, null);
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         toolbar.setTitle(NewspaperName);
         setSupportActionBar(toolbar);

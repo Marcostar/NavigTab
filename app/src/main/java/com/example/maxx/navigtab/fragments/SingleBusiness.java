@@ -16,14 +16,16 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.maxx.navigtab.CategorisedDetails;
+import com.example.maxx.navigtab.IndividualPaperDetails;
 import com.example.maxx.navigtab.MainActivity;
 import com.example.maxx.navigtab.MySingleton;
 import com.example.maxx.navigtab.R;
-import com.example.maxx.navigtab.adapter.NewsAdapter;
+import com.example.maxx.navigtab.adapter.IndividualNewsAdapter;
 import com.example.maxx.navigtab.model.NewsArticles;
 
 import org.json.JSONArray;
@@ -42,22 +44,25 @@ import java.util.List;
 public class SingleBusiness extends Fragment {
 
     private static final String TAG = SingleBusiness.class.getSimpleName();
-    private String url;
+    private String url,paperName;
     private SharedPreferences sharedPreferences;
     private ListView listView;
     private List<NewsArticles> newsArticlesList = new ArrayList<NewsArticles>();
-    private NewsAdapter newsAdapter;
+    private IndividualNewsAdapter newsAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private LinearLayout layout,articleLoading;
+    private LinearLayout layout,timeOutErrorLayout,JsonExceptionLayout,articleLoading;
 
 
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         final View rootview = inflater.inflate(R.layout.categorized_list,container,false);
-        sharedPreferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
         url = sharedPreferences.getString(MainActivity.BUSINESSURL, null);
+        paperName = sharedPreferences.getString(MainActivity.PAPERNAME, null);
         listView = (ListView) rootview.findViewById(R.id.cat_list);
         layout = (LinearLayout) rootview.findViewById(R.id.VolleyError);
+        timeOutErrorLayout = (LinearLayout) rootview.findViewById(R.id.TimeOutError);
+        JsonExceptionLayout = (LinearLayout) rootview.findViewById(R.id.JsonException);
         articleLoading = (LinearLayout) rootview.findViewById(R.id.articleLoading);
         // Retrieve the SwipeRefreshLayout and ListView instances
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootview.findViewById(R.id.swipeRefresh);
@@ -73,20 +78,20 @@ public class SingleBusiness extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        newsAdapter = new NewsAdapter(getActivity(),newsArticlesList);
+        newsAdapter = new IndividualNewsAdapter(getActivity(),newsArticlesList);
         listView.setAdapter(newsAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String NewsPaperName = newsArticlesList.get(position).getNewspaperName();
+                //String NewsPaperName = newsArticlesList.get(position).getNewspaperName();
                 String Title = newsArticlesList.get(position).getTitle();
                 String ThumbnailURL = newsArticlesList.get(position).getThumbnailUrl();
                 String Content = newsArticlesList.get(position).getcontent();
                 String ArticleLink = newsArticlesList.get(position).getArticleLink();
 
                 //Pass the values to another activity
-                Intent intent = new Intent(getActivity(), CategorisedDetails.class);
-                intent.putExtra("NewsPaperName", NewsPaperName);
+                Intent intent = new Intent(getActivity(), IndividualPaperDetails.class);
+                intent.putExtra("NewsPaperName", paperName);
                 intent.putExtra("Title", Title);
                 intent.putExtra("ThumbnailURL", ThumbnailURL);
                 intent.putExtra("Content", Content);
@@ -100,6 +105,8 @@ public class SingleBusiness extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                JsonExceptionLayout.setVisibility(View.GONE);
+                timeOutErrorLayout.setVisibility(View.GONE);
                 layout.setVisibility(View.GONE);
                 initiateRefresh();
             }
@@ -120,30 +127,43 @@ public class SingleBusiness extends Fragment {
     private void initiateRefresh() {
 
         mSwipeRefreshLayout.setRefreshing(true);
-
+        if(!MainActivity.isOnline())
+        {
+            if(!newsArticlesList.isEmpty())
+            {
+                mSwipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(getActivity(),R.string.NoInternet,Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            newsArticlesList.clear();
+        }
         final JsonObjectRequest topStoriesRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     articleLoading.setVisibility(View.GONE);
-                    JSONArray NewsItems = response.getJSONArray("NewsItems");
+                    JSONObject RSS = response.getJSONObject("rss");
+                    JSONObject Channel = RSS.getJSONObject("channel");
+                    JSONArray NewsItems = Channel.getJSONArray("item");
                     Log.d(MainActivity.class.getSimpleName(), NewsItems.toString());
-                    for(int i = 0;i<NewsItems.length();i++)
+                    for(int i = 0;i < NewsItems.length();i++)
                     {
                         JSONObject object = NewsItems.getJSONObject(i);
                         NewsArticles news = new NewsArticles();
 
-                        news.setTitle(object.getString("Title"));
+                        news.setTitle(object.getString("title"));
 
-                        news.setNewspaperName(object.getString("Source"));
+                        //news.setNewspaperName(object.getString("Source"));
 
-                        Document doc = Jsoup.parse(object.getString("Content"));
+                        Document doc = Jsoup.parse(object.getString("description"));
                         news.setcontent(doc.text());
 
-                        news.setArticleLink(object.getString("ArticleLink"));
+                        news.setArticleLink(object.getString("link"));
 
                         //Image Extraction
-                        doc = Jsoup.parse(object.getString("Content"));
+                        doc = Jsoup.parse(object.getString("description"));
                         Elements link = doc.select("img");
                         if(link.attr("src")!= null)
                         {
@@ -158,6 +178,7 @@ public class SingleBusiness extends Fragment {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    JsonExceptionLayout.setVisibility(View.VISIBLE);
                 }
                 newsAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -170,19 +191,23 @@ public class SingleBusiness extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(false);
                 Log.d(TAG, volleyError.toString());
 
+                if(volleyError instanceof TimeoutError || volleyError instanceof NoConnectionError)
+                {
+                    timeOutErrorLayout.setVisibility(View.VISIBLE);
+                }
 
-                if((newsArticlesList.isEmpty())&& (MainActivity.isOnline()== false) )
+                if((newsArticlesList.isEmpty())&& (!MainActivity.isOnline()) )
                 {
                     layout.setVisibility(View.VISIBLE);
                 }
-                else if(MainActivity.isOnline()==false)
+                else if(!MainActivity.isOnline())
                 {
                     Toast.makeText(getActivity(), "Check Your Internet Connection", Toast.LENGTH_LONG).show();
                 }
 
             }
         });
-        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(5000, 5, 1f));
+        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(4000,2,2f));
         MySingleton.getInstance(getActivity()).addToRequestQueue(topStoriesRequest);
 
     }

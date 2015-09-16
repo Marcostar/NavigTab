@@ -55,4 +55,38 @@
             android:textSize="18sp"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/TimeOutError"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/TimeOutErrorText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/timeOutError"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/JsonException"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/JsonExceptionText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/JsonException"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
 </RelativeLayout>

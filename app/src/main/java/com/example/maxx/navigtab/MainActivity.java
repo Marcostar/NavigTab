@@ -49,16 +49,16 @@ public class MainActivity extends AppCompatActivity {
     private String selectedEdition;
 
     public static final String PreferenceSETTINGS = "Preferences";
-    public static final String LANGUAGE = "English";
-    public static final String TOPSTORIESURL = null;
-    public static final String NATIONALURL = null;
-    public static final String WORLDURL = null;
-    public static final String SPORTURL = null;
-    public static final String ENTERTAINMENTURL = null;
-    public static final String BUSINESSURL = null;
+    public static final String LANGUAGE = "India";
+    public static final String TOPSTORIESURL = "TopStoriesURL";
+    public static final String NATIONALURL = "NationalURL";
+    public static final String WORLDURL = "WorldURL";
+    public static final String SPORTURL = "SportURL";
+    public static final String ENTERTAINMENTURL = "EntertainmentURL";
+    public static final String BUSINESSURL = "BusinessURL";
+    public static final String PAPERNAME = "Name";
     SharedPreferences sharedPreferences ;
     SharedPreferences.Editor editor;
-    public String URL="http://192.168.1.4/GetNews/";
 
 
 
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                     editions = getResources().getStringArray(R.array.edition_array);
 
                    /* selectedEdition = editions[position];*/
-                    if (editions[position] == "English")
+                    if (editions[position].equals("English"))
                     {
                         selectedEdition = "India";
                     }
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     editor.putString(LANGUAGE, selectedEdition);
-                    editor.commit();
+                    editor.apply();
                     if (Build.VERSION.SDK_INT >= 11) {
                         recreate();
                     } else {

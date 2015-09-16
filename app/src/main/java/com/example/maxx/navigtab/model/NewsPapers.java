@@ -40,47 +40,47 @@ public class NewsPapers {
         return TopStoriesURL;
     }
 
-    public void setTopStoriesURL(String topStoriesURL) {
-        TopStoriesURL = topStoriesURL;
+    public void setTopStoriesURL(String TopStoriesURL) {
+        this.TopStoriesURL = TopStoriesURL;
     }
 
     public String getNationalURL() {
         return NationalURL;
     }
 
-    public void setNationalURL(String nationalURL) {
-        NationalURL = nationalURL;
+    public void setNationalURL(String NationalURL) {
+        this.NationalURL = NationalURL;
     }
 
     public String getWorldURL() {
         return WorldURL;
     }
 
-    public void setWorldURL(String worldURL) {
-        WorldURL = worldURL;
+    public void setWorldURL(String WorldURL) {
+        this.WorldURL = WorldURL;
     }
 
     public String getSportURL() {
         return SportURL;
     }
 
-    public void setSportURL(String sportURL) {
-        SportURL = sportURL;
+    public void setSportURL(String SportURL) {
+        this.SportURL = SportURL;
     }
 
     public String getEntertainmentURL() {
         return EntertainmentURL;
     }
 
-    public void setEntertainmentURL(String entertainmentURL) {
-        EntertainmentURL = entertainmentURL;
+    public void setEntertainmentURL(String EntertainmentURL) {
+        this.EntertainmentURL = EntertainmentURL;
     }
 
     public String getBusinessURL() {
         return BusinessURL;
     }
 
-    public void setBusinessURL(String businessURL) {
-        BusinessURL = businessURL;
+    public void setBusinessURL(String BusinessURL) {
+        this.BusinessURL = BusinessURL;
     }
 }

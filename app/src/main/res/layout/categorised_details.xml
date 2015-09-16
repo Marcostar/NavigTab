@@ -1,8 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.maxx.navigtab.CategorisedDetails">
+    android:orientation="vertical"
+    tools:context="com.example.maxx.navigtab.CategorisedDetails"
+    android:background="@android:color/white">
 
     <include
         android:id="@+id/my_awesome_toolbar"
@@ -18,12 +20,13 @@
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
         android:layout_below="@+id/my_awesome_toolbar"
-        android:background="@android:color/white">
+        android:background="@color/tabs_background">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/det_thumbnail"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
             android:layout_alignParentLeft="true"
             android:layout_marginRight="8dp"
             />
@@ -32,7 +35,10 @@
             android:id="@+id/det_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
             android:textSize="16dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/background_light"
             android:layout_alignTop="@id/det_thumbnail"
             android:layout_toRightOf="@id/det_thumbnail"
             />
@@ -42,12 +48,13 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/det_title"
-            android:textColor="@color/paper_name"
+            android:textColor="@android:color/background_light"
             android:layout_marginTop="1dip"
             android:layout_toRightOf="@+id/det_thumbnail"
-            android:textSize="15dip" />
+            android:textSize="12dp" />
 
     </RelativeLayout>
+
     <TextView
         android:id="@+id/det_story"
         android:layout_width="fill_parent"
@@ -56,8 +63,23 @@
         android:paddingRight="8dp"
         android:layout_below="@+id/layoutSecond"
         android:layout_alignParentLeft="true"
+        android:layout_weight="1"
         android:scrollbars="vertical"
-        android:background="@android:color/white"
         android:textSize="16dp"/>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/tabs_background">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="Read Full Story"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+
+</LinearLayout>

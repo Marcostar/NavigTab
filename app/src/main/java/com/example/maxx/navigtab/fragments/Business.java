@@ -16,7 +16,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.maxx.navigtab.CategorisedDetails;
@@ -50,17 +52,19 @@ public class Business extends Fragment {
     private List<NewsArticles> newsArticlesList = new ArrayList<NewsArticles>();
     private NewsAdapter newsAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private LinearLayout loadingError,articleLoading;
+    private LinearLayout loadingError,timeOutErrorLayout, JsonExceptionLayout, articleLoading;
 
 
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         final View rootview = inflater.inflate(R.layout.categorized_list,container,false);
-        sharedPreferences = this.getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences(MainActivity.PreferenceSETTINGS, Context.MODE_PRIVATE);
         language = sharedPreferences.getString(MainActivity.LANGUAGE, "India");
         listView = (ListView) rootview.findViewById(R.id.cat_list);
         loadingError = (LinearLayout) rootview.findViewById(R.id.VolleyError);
         articleLoading = (LinearLayout) rootview.findViewById(R.id.articleLoading);
+        timeOutErrorLayout = (LinearLayout) rootview.findViewById(R.id.TimeOutError);
+        JsonExceptionLayout = (LinearLayout) rootview.findViewById(R.id.JsonException);
         // Retrieve the SwipeRefreshLayout and ListView instances
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootview.findViewById(R.id.swipeRefresh);
 
@@ -102,6 +106,8 @@ public class Business extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                JsonExceptionLayout.setVisibility(View.GONE);
+                timeOutErrorLayout.setVisibility(View.GONE);
                 loadingError.setVisibility(View.GONE);
                 initiateRefresh();
             }
@@ -122,7 +128,18 @@ public class Business extends Fragment {
     private void initiateRefresh() {
 
         mSwipeRefreshLayout.setRefreshing(true);
-
+        if(!MainActivity.isOnline())
+        {
+            if(!newsArticlesList.isEmpty())
+            {
+                mSwipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(getActivity(),R.string.NoInternet,Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            newsArticlesList.clear();
+        }
         final JsonObjectRequest topStoriesRequest = new JsonObjectRequest(url+language+StoryType, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -160,6 +177,7 @@ public class Business extends Fragment {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    JsonExceptionLayout.setVisibility(View.VISIBLE);
                 }
                 newsAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -172,19 +190,23 @@ public class Business extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(false);
                 Log.d(TAG, volleyError.toString());
 
+                if(volleyError instanceof TimeoutError || volleyError instanceof NoConnectionError)
+                {
+                    timeOutErrorLayout.setVisibility(View.VISIBLE);
+                }
 
-                if((newsArticlesList.isEmpty())&& (MainActivity.isOnline()== false) )
+                if((newsArticlesList.isEmpty())&& (!MainActivity.isOnline()) )
                 {
                     loadingError.setVisibility(View.VISIBLE);
                 }
-                else if(MainActivity.isOnline()==false)
+                else if(!MainActivity.isOnline())
                 {
                     Toast.makeText(getActivity(), "Check Your Internet Connection", Toast.LENGTH_LONG).show();
                 }
 
             }
         });
-        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(5000,5,1f));
+        topStoriesRequest.setRetryPolicy(new DefaultRetryPolicy(4000,2,2f));
         MySingleton.getInstance(getActivity()).addToRequestQueue(topStoriesRequest);
 
     }

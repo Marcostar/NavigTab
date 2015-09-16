@@ -17,16 +17,16 @@ import com.example.maxx.navigtab.model.NewsArticles;
 import java.util.List;
 
 /**
- * Created by maxx on 23/5/15.
+ * Created by Dzeko on 9/12/2015.
  */
-public class NewsAdapter extends BaseAdapter {
+public class IndividualNewsAdapter extends BaseAdapter {
 
     private Activity activity;
     private LayoutInflater inflater;
     private List<NewsArticles> newsArticlesItems;
     ImageLoader imageLoader;
 
-    public NewsAdapter(Activity activity, List<NewsArticles> newsArticlesItems)
+    public IndividualNewsAdapter(Activity activity, List<NewsArticles> newsArticlesItems)
     {
         this.activity = activity;
         this.newsArticlesItems = newsArticlesItems;
@@ -50,7 +50,7 @@ public class NewsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
 
-    ViewHolder viewHolder;
+        ViewHolder viewHolder;
 
         if(convertView == null)
         {
@@ -60,7 +60,7 @@ public class NewsAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.title = (TextView) convertView.findViewById(R.id.cat_title);
             viewHolder.thumbnail =  (NetworkImageView) convertView.findViewById(R.id.cat_thumbnail);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.cat_paper);
+            //viewHolder.name = (TextView) convertView.findViewById(R.id.cat_paper);
 
             //store the holder of the view
             convertView.setTag(viewHolder);
@@ -84,13 +84,14 @@ public class NewsAdapter extends BaseAdapter {
         }
 
         viewHolder.title.setText(Html.fromHtml(news.getTitle()));
-        viewHolder.name.setText(Html.fromHtml(news.getNewspaperName()));
+        //viewHolder.name.setText(Html.fromHtml(news.getNewspaperName()));
 
         return convertView;
     }
     static class ViewHolder{
         TextView title;
-        TextView name;
+        //TextView name;
         NetworkImageView thumbnail;
     }
 }
+
